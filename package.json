@@ -27,6 +27,7 @@
   	"underscore": ">= 1.5.2"
   },
   "devDependencies": {
-  	"slide": ">= 1.1.5"
+  	"slide": ">= 1.1.5",
+  	"sqlite3": ">= 2.1"
   }
 }

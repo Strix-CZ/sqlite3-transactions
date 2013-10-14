@@ -9,6 +9,7 @@ var TransactionDatabase = require("./sqlite3-transactions").TransactionDatabase;
 
 var db;
 
+var TEST_LENGTH = 20000;
 
 function Runner (fn) {
 	this.timer = null;
@@ -74,7 +75,7 @@ function initDatabase(callback) {
 }
 
 
-function insertData(callback) {
+function insertData1(callback) {
 	// start a transaction
 	//console.log('==beginTransaction');
 	db.beginTransaction(function(err, tr) {
@@ -96,6 +97,20 @@ function insertData(callback) {
 				});
 			}
 		);
+	});
+}
+
+function insertData2(callback) {
+	// start a transaction
+	//console.log('==beginTransaction');
+	db.beginTransaction(function(err, tr) {
+		var data = ['all', 'your', 'base', 'are', 'belong', 'to', 'us'];
+		for (var i=0; i<data.length; ++i)
+			tr.run("INSERT INTO data (t) VALUES (?)", data[i]);
+		tr.rollback(function(e) {
+			//console.log("==rollback done");
+			callback(e);
+		});
 	});
 }
 
@@ -150,9 +165,9 @@ function checkConsistent(callback) {
 	});
 }
 
-function test1(type, callback) {
+function test1(insertFn, integerFn, callback) {
 	// Insert data in transaction and roll'em'back every 10ms
-	var insertRunner = new Runner(insertData);
+	var insertRunner = new Runner(insertFn);
 	insertRunner.on("error", function(err) {
 		console.log("insert error", err);
 		process.exit(1);
@@ -160,14 +175,7 @@ function test1(type, callback) {
 	insertRunner.start(10);
 
 	// Insert increasing integers 0,1... every 9ms
-	var insertIntegerFn;
-	if (type===0)
-		insertIntegerFn = insertInteger;
-	else if (type==1)
-		insertIntegerFn = insertIntegerTransaction;
-	else
-		insertIntegerFn = insertIntegerStatement;
-	var integerRunner = new Runner(insertIntegerFn);
+	var integerRunner = new Runner(integerFn);
 	insertRunner.on("error", function(err) {
 		console.log("integer insert error", err);
 		process.exit(1);
@@ -191,14 +199,17 @@ function test1(type, callback) {
 		insertRunner.stop();
 		integerRunner.stop();
 		consistentRunner.stop();
-		db.close(callback);
-	}, 10000);
+		setTimeout(function() {
+			db.close(callback);
+		}, 500);
+	}, TEST_LENGTH);
 }
 
 var tests = {
-	'Statement': _.partial(test1, 2),
-	'Concurency of transaction and queries': _.partial(test1, 0),
-	'Concurency of two transactions': _.partial(test1, 1),
+	'waiting for all queries in a transaction': _.partial(test1, insertData2, insertInteger),
+	'concurency of transaction and queries': _.partial(test1, insertData1, insertInteger),
+	'concurency of two transactions': _.partial(test1, insertData1, insertIntegerTransaction),
+	'statement': _.partial(test1, insertData1, insertIntegerStatement),
 };
 
 
@@ -209,9 +220,9 @@ for(var iterKey in tests) {
 			init(function() {
 				tests[key](function(err) {
 					if (err)
-						console.log(key, "ERROR", err);
+						console.log("Test", key, "ERROR", err);
 					else
-						console.log(key, "DONE");
+						console.log("Test", key, "DONE");
 					cb(err);
 				});
 			});

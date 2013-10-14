@@ -19,7 +19,7 @@ Sqlite3-transactions solves this problem by transparently locking the database w
 
 ## Install
 ```
-npm install node-sqlite3
+npm install sqlite3
 npm install sqlite3-transactions
 ```
 
