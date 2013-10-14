@@ -22,5 +22,11 @@
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/Strix-CZ/sqlite3-transactions/issues"
+  },
+  "dependencies": {
+  	"underscore": ">= 1.5.2"
+  },
+  "devDependencies": {
+  	"slide": ">= 1.1.5"
   }
 }
