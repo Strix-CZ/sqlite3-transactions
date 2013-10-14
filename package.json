@@ -1,0 +1,26 @@
+{
+  "name": "sqlite3-transactions",
+  "version": "0.0.1",
+  "description": "Adds transactions support to node-sqlite3.",
+  "main": "sqlite3-transactions.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Strix-CZ/sqlite3-transactions.git"
+  },
+  "keywords": [
+    "sqlite",
+    "sqlite3",
+    "node-sqlite3",
+    "transaction",
+    "transactions",
+    "node.js"
+  ],
+  "author": "Jan Šimonek <jan.simonek@gmail.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/Strix-CZ/sqlite3-transactions/issues"
+  }
+}
