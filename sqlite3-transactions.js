@@ -123,7 +123,8 @@ function wrapDbMethod(transactionDatabase, object, method) {
 				originalCallback = function(e) {
 					if (e) transactionDatabase.db.emit("error", e);
 				};
-				args.push(newCallback);
+				args[args.length] = newCallback;
+				args.length++;
 			}
 		}
 
