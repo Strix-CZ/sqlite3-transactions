@@ -1,6 +1,6 @@
 {
   "name": "sqlite3-transactions",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Adds transactions support to node-sqlite3.",
   "main": "sqlite3-transactions.js",
   "scripts": {
@@ -24,10 +24,10 @@
     "url": "https://github.com/Strix-CZ/sqlite3-transactions/issues"
   },
   "dependencies": {
-  	"underscore": ">= 1.5.2"
+    "underscore": ">= 1.5.2"
   },
   "devDependencies": {
-  	"slide": ">= 1.1.5",
-  	"sqlite3": ">= 2.1"
+    "slide": ">= 1.1.5",
+    "sqlite3": ">= 2.1"
   }
 }
