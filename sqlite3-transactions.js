@@ -110,7 +110,7 @@ function wrapDbMethod(transactionDatabase, object, method) {
 			// hijack the callback to implement locking
 			var originalCallback;
 			var newCallback = function() {
-				if (transactionDatabase._lock<1) throw new Exception("Locks are not ballanced. Sorry.");
+				if (transactionDatabase._lock<1) throw new Error("Locks are not ballanced. Sorry.");
 				transactionDatabase._lock--;
 				originalCallback.apply(this, arguments);
 			};
@@ -247,7 +247,7 @@ TransactionDatabase.prototype.beginTransaction = function(callback) {
 			if (err) callback(err);
 			self._exec("COMMIT;", function(err) {
 				if (err)
-					tr.rollback(function(/* ignoring the potential error of rollback */) { cb(er); });
+					tr.rollback(function(/* ignoring the potential error of rollback */) { cb(err); });
 				else
 					finishTransaction(null, cb);
 			});
