@@ -58,7 +58,7 @@ db.beginTransaction(function(err, transaction) {
 	    transaction.commit(function(err) {
             if (err) return console.log("Sad panda :-( commit() failed.", err);
             console.log("Happy panda :-) commit() was successful.");
-        );
+        });
 	    // or transaction.rollback()
         
     });
