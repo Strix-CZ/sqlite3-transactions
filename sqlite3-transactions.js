@@ -111,8 +111,8 @@ function wrapDbMethod(transactionDatabase, object, method) {
 				if (e) transactionDatabase.db.emit("error", e);
 			};
 
-			// If needed add a dummy completion callback the 'each' method so the
-			// callback wrapper can decrement the lock value
+			// If needed add a dummy completion callback to the 'each' method so that
+			// the callback wrapper can decrement the lock value
 			if (method == 'each') {
 				if (arguments.length < 2 || !_.isFunction(args[args.length-1]) &&
 					!_.isFunction(args[args.length-2])) {
