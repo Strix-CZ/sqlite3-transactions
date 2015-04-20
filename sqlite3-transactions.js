@@ -1,4 +1,4 @@
-var sys = require('sys'),
+var util = require('util'),
     events = require('events'),
     _ = require("underscore");
 
@@ -83,7 +83,7 @@ function TransactionDatabase(database, exec) {
 		return newStatement;
 	};
 }
-sys.inherits(TransactionDatabase, events.EventEmitter);
+util.inherits(TransactionDatabase, events.EventEmitter);
 module.exports.TransactionDatabase = TransactionDatabase;
 
 
@@ -128,7 +128,7 @@ function wrapDbMethod(transactionDatabase, object, method) {
 			// hijack the callback to implement locking
 			var originalCallback;
 			var newCallback = function() {
-				if (transactionDatabase._lock<1) throw new Error("Locks are not ballanced. Sorry.");
+				if (transactionDatabase._lock<1) throw new Error("Locks are not balanced.");
 				transactionDatabase._lock--;
 				originalCallback.apply(this, arguments);
 			};
