@@ -2,7 +2,7 @@ var sqlite3 = require("sqlite3"),
 	_ = require("underscore"),
 	slide = require("slide"),
 	fs = require("fs"),
-	sys = require('sys'),
+	util = require('util'),
     events = require('events');
 
 var TransactionDatabase = require("./sqlite3-transactions").TransactionDatabase;
@@ -16,7 +16,7 @@ function Runner (fn) {
 	this.fn = fn;
 	events.EventEmitter.call(this);
 }
-sys.inherits(Runner, events.EventEmitter);
+util.inherits(Runner, events.EventEmitter);
 
 Runner.prototype.start = function(interval) {
 	var self = this;
