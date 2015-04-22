@@ -1,4 +1,4 @@
-var sys = require('sys'),
+var util = require('util'),
     events = require('events'),
     _ = require("underscore");
 
@@ -83,7 +83,7 @@ function TransactionDatabase(database, exec) {
 		return newStatement;
 	};
 }
-sys.inherits(TransactionDatabase, events.EventEmitter);
+util.inherits(TransactionDatabase, events.EventEmitter);
 module.exports.TransactionDatabase = TransactionDatabase;
 
 
@@ -107,10 +107,28 @@ function wrapDbMethod(transactionDatabase, object, method) {
 		var args = arguments;
 
 		if (locking) {
+			function dummyCallback(e) {
+				if (e) transactionDatabase.db.emit("error", e);
+			};
+
+			// If needed add a dummy completion callback to the 'each' method so that
+			// the callback wrapper can decrement the lock value
+			if (method == 'each') {
+				if (arguments.length < 2 || !_.isFunction(args[args.length-1]) &&
+					!_.isFunction(args[args.length-2])) {
+					args[args.length] = args[args.length + 1] = dummyCallback;
+					args.length += 2;
+				}
+				else if (_.isFunction(args[args.length-1]) && !_.isFunction(args[args.length-2])) {
+					args[args.length] = dummyCallback;
+					args.length++;
+				}
+			}
+
 			// hijack the callback to implement locking
 			var originalCallback;
 			var newCallback = function() {
-				if (transactionDatabase._lock<1) throw new Error("Locks are not ballanced. Sorry.");
+				if (transactionDatabase._lock<1) throw new Error("Locks are not balanced.");
 				transactionDatabase._lock--;
 				originalCallback.apply(this, arguments);
 			};
@@ -120,9 +138,7 @@ function wrapDbMethod(transactionDatabase, object, method) {
 				args[args.length-1] = newCallback;
 			}
 			else {
-				originalCallback = function(e) {
-					if (e) transactionDatabase.db.emit("error", e);
-				};
+				originalCallback = dummyCallback;
 				args[args.length] = newCallback;
 				args.length++;
 			}
