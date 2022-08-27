@@ -1,6 +1,8 @@
 #sqlite3-transactions
 
-Adds transactions support to [node-sqlite3](https://github.com/developmentseed/node-sqlite3).
+**WARNING** I'm sorry, this project is not maintained since 2014. The code is not complicated though. If you need to make changes, please fork it.
+
+The project adds transactions support to [node-sqlite3](https://github.com/developmentseed/node-sqlite3).
 
 ## Background
 
